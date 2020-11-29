@@ -60,6 +60,7 @@ It contains 3 functions.
 Exercise 7: 
 We can use pipeline to feed the output of find to wc
 find . -name "*.h" | wc -l
+3915
 
 Part 2:
 (Exercise 8 is a coding exercise)
