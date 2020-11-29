@@ -1,5 +1,5 @@
-Name:
-PERM #:
+Name: Yuxiao Luo   
+PERM #: 6375190
 
 Collaborators (who you talked to about the lab, what you talked about):
 
@@ -8,48 +8,84 @@ Source material that you consulted:
 
 
 Other acknowledgments:
-
+slack
 
 -------------------------------------------------------------------------------
 
 Part 1:
 
 Exercise 1:
+This command search all files in current folder lab3 recurisvely and prints each line that contains the term "smutex".
 
+sthread.cpp:void smutex_init(smutex_t *mutex)
+sthread.cpp:void smutex_destroy(smutex_t *mutex)
+sthread.cpp:void smutex_lock(smutex_t *mutex)
+...
 
 Exercise 2:
+grep "Task " RequestGenerator.cpp
+grep "return " *.h
 
 
 Exercise 3:
+This command search all files in current folder recursively of the regex pattern described
+inside the double quotes.
+
+In grep, a dot character will match any character except a return.
+When an asterisk ( * ) follows a character or a regular expression, 
+grep interprets it as "zero or more instances of that character or regular expression. 
+As a result, the keyword "smutex.*(.*);" means any line that has a pattern that starts with 
+"smutex" following with one or more intances of any arbitrary character except a return, 
+has a pair of parentheses containing one or more intances of any arbitrary character except a return,
+and ends with a semicolon ";".
+
+In practical, the lines that this command returns are all function signatures in form of the pattern 
+described above. From these lines we can know that, of all the code in current folder, the only lines 
+that contain this pattern are just the function signatures inside the sthread.h file. 
 
 
 Exercise 4:
-
+This command opens blkdev.h and takes us to the definition of block_device_operations in that file.
 
 Exercise 5: 
-
+futex_pi_state is a struct storing the priority inheritane state w.r.t a futex in use. 
+It is defined in kernel/futex.c at line 188
 
 Exercise 6: 
-
+It contains 3 functions.
+1 proc_sched_autogroup_show_task  kernel/sched/auto_group.c
+2 proc_sched_set_task             kernel/sched/debug.c
+3 proc_sched_show_task            kernel/sched/debug.c
 
 Exercise 7: 
-
+We can use pipeline to feed the output of find to wc
+find . -name "*.h" | wc -l
 
 Part 2:
 (Exercise 8 is a coding exercise)
 
-
 Exercise 9:
+Bug code:
+    do{
+        r += 1;
+        p = p->next;
+    }while (p) 
 
+fix to:
+    while (p) {
+        r += 1;
+        p = p->next;
+    }
 
 Exercise 10:
-
+The value of %eax is 0x10 in hex or 16 in decimal.
 
 Exercise 11:
-
+p_state value is P_EMPTY
 
 Exercise 12:
-
+When the first time the program execute interrupt(), reg_intno is 0.
+So it will go to the default case.
 
 (Exercise 13 is a coding exercise)
 
@@ -59,7 +95,7 @@ Part 3:
 
 Exercise 14:
 
-The name of the scheduling algorithm is:
+The name of the scheduling algorithm is: Round Robin
 
 
 (Exercise 15 is a coding exercise)
@@ -67,20 +103,30 @@ The name of the scheduling algorithm is:
 
 Exercise 16:
 
+// turnaround = Burst time + Waiting time = Exit time - Arrival time
+// response = Start_execution time - Arrival time = waiting time between when job enters system and starts executing
+
 Average turnaround time for scheduling_algorithm 0:
+round-robin: 1 cycle has 4 processes
+(320*4 + 320*4-1 + 320*4-2 + 320*4-3) = 1278.5ms
 Average turnaround time for scheduling_algorithm 1:
+(320+320*2+320*3+320*4)/4 = 800ms
 
 Average response time for scheduling_algorithm 0:
+(0+1+2+3)/4 = 1.5ms
 Average response time for scheduling_algorithm 1:
-
+(0+320+320*2+320*3)/4 = 480ms
 
 Exercise 17:
 
 Did you complete Exercise 17A, Exercise 17B, or both?
-
+17A.
 
 Exercise 18:
-
+In process 3 the first timer interrupt occurs, because in the last cycle 
+as shown in the last line, it does not print "3". This is when 
+the clock interrupt happens, as the CPU will stop the currently-running process
+ -- which is process 3 -- and transfer control to the kernel.
 
 (Exercise 19 is a coding exercise)
 

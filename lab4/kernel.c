@@ -67,8 +67,8 @@ start(void)
 	// Set up hardware (x86.c)
 	segments_init();
 
-        zero = 202 / zero;
-	interrupt_controller_init(0);
+    //    zero = 202 / zero;
+	interrupt_controller_init(1);
 	console_clear();
 
 	// Initialize process descriptors as empty
@@ -77,6 +77,14 @@ start(void)
 		proc_array[i].p_pid = i;
 		proc_array[i].p_state = P_EMPTY;
 	}
+
+	/*
+	// testing 17a
+	proc_array[1].p_priority = 4;
+	proc_array[2].p_priority = 3;
+	proc_array[3].p_priority = 2;
+	proc_array[4].p_priority = 1;
+	*/
 
 	// Set up process descriptors (the proc_array[])
 	for (i = 1; i < NPROCS; i++) {
@@ -94,6 +102,7 @@ start(void)
 
 		// Mark the process as runnable!
 		proc->p_state = P_RUNNABLE;
+
 	}
 
 	// Initialize the cursor-position shared variable to point to the
@@ -148,10 +157,15 @@ interrupt(registers_t *reg)
 		// 'sys_user*' are provided for your convenience, in case you
 		// want to add a system call.
 		/* Your code here (if you want). */
+
+		// set the passed-in priority syscall number to be its priority number
+		current->p_priority = current->p_registers.reg_eax; 
 		run(current);
 
 	case INT_SYS_USER2:
 		/* Your code here (if you want). */
+		// next cursor position is the passed-in number stored in reg_eax
+		*cursorpos++ = current->p_registers.reg_eax;
 		run(current);
 
 	case INT_CLOCK:
@@ -161,7 +175,7 @@ interrupt(registers_t *reg)
 		schedule();
 
 	default:
-                zero = 202 / zero;
+        //        zero = 202 / zero;
 		while (1)
 			/* do nothing */;
 
@@ -198,7 +212,36 @@ schedule(void)
 			if (proc_array[pid].p_state == P_RUNNABLE)
 				run(&proc_array[pid]);
 		}
+ 
+	// ex15
+	if (scheduling_algorithm == 1){
+		while(1){
+			for(int i=1; i<NPROCS; i++){	
+				if(proc_array[i].p_state == P_RUNNABLE){
+					run(&proc_array[i]);
+				}
+			}	
+		}
+	}
 
+	// ex17a
+	if (scheduling_algorithm == 2){
+		while(1){
+			int current_top = 9999999; // pretty high bar for number of priority
+			int p_to_run = -1;
+			for(int i=1; i<NPROCS; i++){
+				if(proc_array[i].p_state == P_RUNNABLE && proc_array[i].p_priority < current_top){
+					current_top = proc_array[i].p_priority;
+					p_to_run = i;
+				}
+			}
+
+			if(p_to_run != -1){
+				run(&proc_array[p_to_run]);
+			}
+		}
+	}
+	
 	// If we get here, we are running an unknown scheduling algorithm.
 	cursorpos = console_printf(cursorpos, 0x100, "\nUnknown scheduling algorithm %d\n", scheduling_algorithm);
 	while (1)

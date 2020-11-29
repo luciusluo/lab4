@@ -25,11 +25,14 @@ pmain(void)
 
 	for (i = 0; i < RUNCOUNT; i++) {
 		// Write characters to the console, yielding after each one.
-		*cursorpos++ = PRINTCHAR;
+		//*cursorpos++ = PRINTCHAR;
+		sys_print_atomic(PRINTCHAR); // syscall to print to console
 		sys_yield();
 	}
 
+	
 	// Yield forever.
-	while (1)
-		sys_yield();
+	//while (1)			
+	//	sys_yield();
+	sys_exit(0);
 }

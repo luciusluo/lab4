@@ -30,11 +30,14 @@ typedef struct process {
 
 	procstate_t p_state;		// Process state; see above
 	int p_exit_status;		// Process's exit status
+
+	// ex17a
+	int p_priority;
 } process_t;
 
 
 // Clock frequency: the clock interrupt, if any, happens HZ times a second
-#define HZ			100
+#define HZ			1000
 
 // The interrupt number corresponding to the first hardware interrupt
 #define INT_HARDWARE		32

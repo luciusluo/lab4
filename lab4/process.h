@@ -34,6 +34,27 @@ sys_yield(void)
 		     : "cc", "memory");
 }
 
+// ex17a setting priority
+static inline void
+sys_priority(int priority)
+{ // trigger interrupt INT_SYS_USER, load priority into %eax
+	asm volatile("int %0\n"
+		     : : "i" (INT_SYS_USER1),
+		         "a" (priority)
+		     : "cc", "memory");
+}
+
+
+
+static inline void
+sys_print_atomic(int number)
+{ // trigger interrupt INT_SYS_USER, load priority into %eax
+	asm volatile("int %0\n"
+		     : : "i" (INT_SYS_USER2),
+		         "a" (number)
+		     : "cc", "memory");
+}
+
 
 /*****************************************************************************
  * sys_exit(status)
@@ -60,5 +81,6 @@ sys_exit(int status)
 		     : "cc", "memory");
     loop: goto loop; // Convince GCC that function truly does not return.
 }
+
 
 #endif
